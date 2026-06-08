@@ -70,7 +70,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: pointer;
   transition: background 0.3s, transform 0.3s;
   font-size: 1.1rem;
   font-weight: bold;
@@ -80,6 +79,18 @@
     background-color: rgba($primary-color, 0.1);
     transform: translateY(-2px);
   }
+}
+
+.groupItemButton {
+  flex: 1;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .deleteButton {
@@ -99,7 +110,7 @@
 }
 
 .backButton {
-  background-color: gray;
+  background-color: #4b5563;
   color: white;
   border: none;
   padding: 0.6rem 1.2rem;
@@ -110,7 +121,7 @@
   transition: background 0.3s;
 
   &:hover {
-    background-color: darkgray;
+    background-color: #374151;
   }
 }
 

@@ -1,4 +1,4 @@
-import { useState, useCallback, type ReactNode } from "react";
+import { useState, useCallback, useMemo, type ReactNode } from "react";
 import graphqlClient from "../../api/graphClient";
 import { BalanceContext, type Balance } from "./BalanceContext";
 
@@ -27,8 +27,13 @@ export const BalanceProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  const contextValue = useMemo(
+    () => ({ balance, refreshBalance }),
+    [balance, refreshBalance]
+  );
+
   return (
-    <BalanceContext.Provider value={{ balance, refreshBalance }}>
+    <BalanceContext.Provider value={contextValue}>
       {children}
     </BalanceContext.Provider>
   );

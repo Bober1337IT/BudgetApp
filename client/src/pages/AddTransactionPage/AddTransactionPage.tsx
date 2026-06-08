@@ -63,19 +63,21 @@ const AddTransactionPage = () => {
       <h2>Dodaj Transakcję</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.formGroup}>
-          <label>Kwota:</label>
+          <label htmlFor="add-transaction-amount">Kwota:</label>
           <input 
+            id="add-transaction-amount"
             type="number" 
             value={amount} 
-            onChange={(e) => setAmount(parseFloat(e.target.value))} 
+            onChange={(e) => setAmount(Number.parseFloat(e.target.value))} 
             required 
             className={styles.input}
           />
           {errors.amount && <ErrorMessage message={errors.amount} />}
         </div>
         <div className={styles.formGroup}>
-          <label>Typ:</label>
+          <label htmlFor="add-transaction-type">Typ:</label>
           <select 
+            id="add-transaction-type"
             value={type} 
             onChange={(e) => setType(e.target.value as 'INCOME' | 'EXPENSE')} 
             className={styles.input}
@@ -86,8 +88,9 @@ const AddTransactionPage = () => {
           {errors.type && <ErrorMessage message={errors.type} />}
         </div>
         <div className={styles.formGroup}>
-          <label>Tag:</label>
+          <label htmlFor="add-transaction-tags">Tag:</label>
           <input 
+            id="add-transaction-tags"
             type="text" 
             value={tags} 
             onChange={(e) => setTags(e.target.value)} 
@@ -96,8 +99,9 @@ const AddTransactionPage = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label>Notatki:</label>
+          <label htmlFor="add-transaction-notes">Notatki:</label>
           <textarea 
+            id="add-transaction-notes"
             value={notes} 
             onChange={(e) => setNotes(e.target.value)} 
             placeholder="Dodatkowe informacje"
