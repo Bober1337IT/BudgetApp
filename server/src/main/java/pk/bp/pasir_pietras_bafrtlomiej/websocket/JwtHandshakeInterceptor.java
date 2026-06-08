@@ -69,5 +69,6 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
             ServerHttpResponse response,
             WebSocketHandler wsHandler,
             Exception exception) {
+        // Hook wymagany przez HandshakeInterceptor — brak dodatkowej logiki po nawiązaniu połączenia.
     }
 }

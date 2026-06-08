@@ -16,6 +16,8 @@ import java.util.List;
 @Service
 public class MembershipService {
 
+    private static final String GROUP_NOT_FOUND_PREFIX = "Nie znaleziono grupy o ID: ";
+
     private final MembershipRepository membershipRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
@@ -46,7 +48,7 @@ public class MembershipService {
 
         Group group = groupRepository.findById(membershipDTO.getGroupId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Nie znaleziono grupy o ID: " + membershipDTO.getGroupId()));
+                        GROUP_NOT_FOUND_PREFIX + membershipDTO.getGroupId()));
 
         boolean alreadyMember = membershipRepository.findByGroupId(group.getId())
                 .stream()
@@ -83,7 +85,7 @@ public class MembershipService {
 
     public void assertCurrentUserIsGroupMember(Long groupId) {
         groupRepository.findById(groupId)
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono grupy o ID: " + groupId));
+                .orElseThrow(() -> new EntityNotFoundException(GROUP_NOT_FOUND_PREFIX + groupId));
 
         User currentUser = currentUserService.getCurrentUser();
         assertUserIsGroupMember(groupId, currentUser.getId());
@@ -91,7 +93,7 @@ public class MembershipService {
 
     public void assertCurrentUserIsGroupOwner(Long groupId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono grupy o ID: " + groupId));
+                .orElseThrow(() -> new EntityNotFoundException(GROUP_NOT_FOUND_PREFIX + groupId));
 
         User currentUser = currentUserService.getCurrentUser();
         if (!group.getOwner().getId().equals(currentUser.getId())) {
