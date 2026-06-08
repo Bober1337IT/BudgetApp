@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - fix-issue-*
+      - fix-issues
   pull_request:
     types: [opened, synchronize, reopened]
 
