@@ -23,14 +23,8 @@ const ConfirmModal = ({
   if (!visible) return null;
 
   return (
-    <div className={styles.modalOverlay} role="presentation" onClick={onCancel}>
-      <div
-        className={styles.modal}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="confirm-modal-title"
-        onClick={(event) => event.stopPropagation()}
-      >
+    <dialog open className={styles.modalDialog} aria-labelledby="confirm-modal-title">
+      <div className={styles.modal}>
         <h3 id="confirm-modal-title">{title}</h3>
         <p>{message}</p>
         <div className={styles.actions}>
@@ -42,7 +36,7 @@ const ConfirmModal = ({
           </button>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 };
 

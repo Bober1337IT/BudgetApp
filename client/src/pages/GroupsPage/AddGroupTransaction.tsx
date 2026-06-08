@@ -50,15 +50,16 @@ const AddGroupTransaction = ({
 
   const toggleUserSelection = (userId: Id) => {
     setHasCustomParticipants(true);
-    setSelectedUserIds((current) =>
-      (hasCustomParticipants ? current : memberIds).some(
-        (id) => String(id) === String(userId)
-      )
-        ? (hasCustomParticipants ? current : memberIds).filter(
-            (id) => String(id) !== String(userId)
-          )
-        : [...(hasCustomParticipants ? current : memberIds), userId]
-    );
+    setSelectedUserIds((current) => {
+      const base = hasCustomParticipants ? current : memberIds;
+      const isSelected = base.some((id) => String(id) === String(userId));
+
+      if (isSelected) {
+        return base.filter((id) => String(id) !== String(userId));
+      }
+
+      return [...base, userId];
+    });
   };
 
   const handleSubmit = async (e: FormEvent) => {

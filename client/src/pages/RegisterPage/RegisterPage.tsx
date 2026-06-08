@@ -72,8 +72,9 @@ const RegisterPage: React.FC = () => {
       <h2>Rejestracja</h2>
       <form onSubmit={handleRegister} className={styles.form}>
         <div className={styles.formGroup}>
-          <label>Nazwa użytkownika:</label>
+          <label htmlFor="register-username">Nazwa użytkownika:</label>
           <input
+            id="register-username"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -83,8 +84,9 @@ const RegisterPage: React.FC = () => {
           {errors.username && <ErrorMessage message={errors.username} />}
         </div>
         <div className={styles.formGroup}>
-          <label>Email:</label>
+          <label htmlFor="register-email">Email:</label>
           <input
+            id="register-email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -94,8 +96,9 @@ const RegisterPage: React.FC = () => {
           {errors.email && <ErrorMessage message={errors.email} />}
         </div>
         <div className={styles.formGroup}>
-          <label>Hasło:</label>
+          <label htmlFor="register-password">Hasło:</label>
           <input
+            id="register-password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -105,8 +108,9 @@ const RegisterPage: React.FC = () => {
           {errors.password && <ErrorMessage message={errors.password} />}
         </div>
         <div className={styles.formGroup}>
-          <label>Powtórz hasło:</label>
+          <label htmlFor="register-confirm-password">Powtórz hasło:</label>
           <input
+            id="register-confirm-password"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}

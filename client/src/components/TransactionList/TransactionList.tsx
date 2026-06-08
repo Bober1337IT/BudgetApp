@@ -84,7 +84,7 @@ const TransactionList = () => {
     const errors: { [key: string]: string } = {};
     const { amount, type, tags, notes } = editValues;
 
-    if (!amount || parseFloat(amount.toString()) <= 0) {
+    if (!amount || Number.parseFloat(amount.toString()) <= 0) {
       errors.amount = "Kwota musi być większa od zera.";
     }
 
@@ -169,6 +169,9 @@ const TransactionList = () => {
   if (loading) return <p>Ładowanie...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
+  const formatTransactionType = (type: string) =>
+    type === "INCOME" ? "Przychód" : "Wydatek";
+
   return (
     <div className={styles["transaction-list"]}>
       <h2>Lista Transakcji</h2>
@@ -216,10 +219,8 @@ const TransactionList = () => {
                       <p className={styles.error}>{editErrors.type}</p>
                     )}
                   </>
-                ) : transaction.type === "INCOME" ? (
-                  "Przychód"
                 ) : (
-                  "Wydatek"
+                  formatTransactionType(transaction.type)
                 )}
               </td>
               <td>
