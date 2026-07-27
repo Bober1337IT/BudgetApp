@@ -37,9 +37,9 @@ services:
   frontend:
     build:
       context: ./client
-      args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080}
     restart: unless-stopped
+    env_file:
+      - ./server/.env
     ports:
       - "5174:8080"
     depends_on:

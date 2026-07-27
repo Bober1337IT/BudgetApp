@@ -135,7 +135,7 @@ VITE_API_BASE_URL=http://localhost:8080
 | `TZ` | Strefa czasowa kontenera MySQL, np. `Europe/Warsaw` | nie |
 | `JWT_SECRET` | Sekret do podpisywania tokenów JWT (algorytm HS512) | tak |
 | `CORS_ALLOWED_ORIGINS` | Adres(y) frontendu dozwolone w CORS backendu (po przecinku, jeśli kilka) | tak |
-| `VITE_API_BASE_URL` | Publiczny adres backendu dla frontendu (REST, GraphQL, WebSocket) | tak |
+| `VITE_API_BASE_URL` | Publiczny adres backendu dla frontendu (REST, GraphQL, WebSocket). W Dockerze wczytywany **przy starcie kontenera** (runtime), nie podczas `npm run build` | tak |
 
 **Uwagi:**
 
@@ -144,6 +144,11 @@ VITE_API_BASE_URL=http://localhost:8080
 - Plik `.env` jest w `.gitignore` — nie commituj go do repozytorium.
 - Przy uruchamianiu backendu lokalnie (`mvn spring-boot:run`) uruchamiaj polecenie z katalogu `server/`, żeby Spring znalazł `.env`.
 - Frontend w trybie dev (`npm run dev`) czyta `client/.env` — ustaw tam ten sam `VITE_API_BASE_URL`.
+- **Docker frontend:** adres API trafia do przeglądarki przez `/config.js` generowany przy starcie kontenera z `server/.env`. Po zmianie IP wystarczy restart frontendu — **bez przebudowy obrazu**:
+  ```bash
+  docker compose --env-file ./server/.env up -d frontend
+  ```
+- Używaj **`server/.env`**, nie pliku `.env` w katalogu głównym — Compose ładuje go przez `env_file` w serwisach.
 
 #### Przykład na serwerze Proxmox (VM z Docker Compose)
 
@@ -162,10 +167,16 @@ CORS_ALLOWED_ORIGINS=http://192.168.1.50:5174
 VITE_API_BASE_URL=http://192.168.1.50:8080
 ```
 
-Potem:
+Potem (pierwsze uruchomienie — z buildem):
 
 ```bash
 docker compose --env-file ./server/.env up -d --build
+```
+
+Po zmianie `VITE_API_BASE_URL` lub `CORS_ALLOWED_ORIGINS` w `server/.env`:
+
+```bash
+docker compose --env-file ./server/.env up -d --force-recreate backend frontend
 ```
 
 Aplikacja będzie dostępna pod:
