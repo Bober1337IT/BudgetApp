@@ -102,24 +102,54 @@ Warstwa serwisów weryfikuje uprawnienia (właściciel grupy, członek grupy, w�
 - Maven
 - Docker (opcjonalnie, do bazy MySQL)
 
-### Baza danych
+### Konfiguracja `.env`
 
-W katalogu `server/` utwórz plik `.env`:
+W katalogu `server/` utwórz plik `.env` (format `klucz=wartość`, bez cudzysłowów). Plik jest wczytywany przez:
+
+- **Spring Boot** — `application.properties` importuje go przez `spring.config.import=optional:file:.env[.properties]`
+- **Docker Compose** — `./server/.env` (root) lub `server/docker/docker-compose.yml` (`../.env`)
+
+Przykładowa zawartość (wartości deweloperskie):
 
 ```env
-MYSQL_DATABASE=nazwa_bazy
-MYSQL_USER=uzytkownik
-MYSQL_PASSWORD=haslo
-MYSQL_ROOT_PASSWORD=haslo_root
+MYSQL_DATABASE=budgetapp
+MYSQL_USER=budgetapp
+MYSQL_PASSWORD=budgetapp_dev
+MYSQL_ROOT_PASSWORD=root_dev_password
 MYSQL_CONTAINER_NAME=budgetapp-mysql
 TZ=Europe/Warsaw
-JWT_SECRET=dlugi_losowy_sekret_min_64_znaki
+JWT_SECRET=pasir_jwt_secret_key_for_development_only_must_be_at_least_64_bytes_long_12345
 ```
+
+| Zmienna | Opis | Wymagana |
+|---|---|---|
+| `MYSQL_DATABASE` | Nazwa bazy danych tworzonej w MySQL | tak |
+| `MYSQL_USER` | Użytkownik MySQL z dostępem do `MYSQL_DATABASE` | tak |
+| `MYSQL_PASSWORD` | Hasło użytkownika `MYSQL_USER` | tak |
+| `MYSQL_ROOT_PASSWORD` | Hasło roota MySQL (healthcheck Dockera) | tak |
+| `MYSQL_CONTAINER_NAME` | Nazwa kontenera MySQL (`server/docker/docker-compose.yml`) | tak (Docker) |
+| `TZ` | Strefa czasowa kontenera MySQL, np. `Europe/Warsaw` | nie |
+| `JWT_SECRET` | Sekret do podpisywania tokenów JWT (algorytm HS512) | tak |
+
+**Uwagi:**
+
+- `JWT_SECRET` musi mieć **co najmniej 64 bajty** — inaczej backend nie wystartuje (`JwtUtil`).
+- W produkcji ustaw silne, unikalne hasła i losowy sekret JWT (np. `openssl rand -base64 64`).
+- Plik `.env` jest w `.gitignore` — nie commituj go do repozytorium.
+- Przy uruchamianiu backendu lokalnie (`mvn spring-boot:run`) uruchamiaj polecenie z katalogu `server/`, żeby Spring znalazł `.env`.
+
+### Baza danych
 
 Uruchom MySQL:
 
 ```bash
 cd server/docker
+docker compose --env-file ../.env up -d
+```
+
+Cały stack (MySQL + backend + frontend) z katalogu głównego:
+
+```bash
 docker compose up -d
 ```
 
