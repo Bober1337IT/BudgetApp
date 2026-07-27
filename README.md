@@ -148,7 +148,7 @@ VITE_API_BASE_URL=http://localhost:8080
 - Frontend w trybie dev (`npm run dev`) czyta `client/.env` — ustaw tam ten sam `VITE_API_BASE_URL`.
 - **Docker frontend:** adres API trafia do przeglądarki przez `/config.js` generowany przy starcie kontenera z `server/.env`. Po zmianie IP wystarczy restart frontendu — **bez przebudowy obrazu**:
   ```bash
-  docker compose --env-file ./server/.env up -d frontend
+  docker-compose up -d frontend
   ```
 - Używaj **`server/.env`**, nie pliku `.env` w katalogu głównym — Compose ładuje go przez `env_file` w serwisach.
 
@@ -169,16 +169,16 @@ CORS_ALLOWED_ORIGINS=http://192.168.1.50:5174
 VITE_API_BASE_URL=http://192.168.1.50:8080
 ```
 
-Potem (pierwsze uruchomienie — z buildem):
+Potem:
 
 ```bash
-docker compose --env-file ./server/.env up -d --build
+docker-compose up -d --build
 ```
 
 Po zmianie `VITE_API_BASE_URL` lub `CORS_ALLOWED_ORIGINS` w `server/.env`:
 
 ```bash
-docker compose --env-file ./server/.env up -d --force-recreate backend frontend
+docker-compose up -d --force-recreate backend frontend
 ```
 
 Aplikacja będzie dostępna pod:
@@ -194,13 +194,13 @@ Uruchom MySQL:
 
 ```bash
 cd server/docker
-docker compose --env-file ../.env up -d
+docker-compose --env-file ../.env up -d
 ```
 
 Cały stack (MySQL + backend + frontend) z katalogu głównego:
 
 ```bash
-docker compose --env-file ./server/.env up -d --build
+docker-compose up -d --build
 ```
 
 ### Backend
