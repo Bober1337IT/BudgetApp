@@ -139,6 +139,8 @@ VITE_API_BASE_URL=http://localhost:8080
 
 **Uwagi:**
 
+- Backend w Dockerze **zawsze nasłuchuje na porcie 8080** wewnątrz kontenera (`SERVER_PORT=8080` w `docker-compose.yml`). Nie ustawiaj `SERVER_PORT` ani `PORT` w `server/.env`.
+
 - `JWT_SECRET` musi mieć **co najmniej 64 bajty** — inaczej backend nie wystartuje (`JwtUtil`).
 - W produkcji ustaw silne, unikalne hasła i losowy sekret JWT (np. `openssl rand -base64 64`).
 - Plik `.env` jest w `.gitignore` — nie commituj go do repozytorium.
