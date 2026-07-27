@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { getGroupNotificationsWebSocketUrl } from "../../config/apiConfig";
 import { useAuth } from "../../context/AuthContext";
 
 interface GroupNotification {
@@ -13,11 +14,6 @@ interface GroupNotification {
   message: string;
 }
 
-const getWebSocketUrl = (token: string) => {
-  const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-  return `${protocol}://localhost:8080/ws/group-notifications?token=${encodeURIComponent(token)}`;
-};
-
 const GroupNotificationsListener = () => {
   const { isAuthenticated } = useAuth();
 
@@ -27,7 +23,7 @@ const GroupNotificationsListener = () => {
     const token = localStorage.getItem("accessToken");
     if (!token) return;
 
-    const socket = new WebSocket(getWebSocketUrl(token));
+    const socket = new WebSocket(getGroupNotificationsWebSocketUrl(token));
 
     socket.onmessage = (event) => {
       try {

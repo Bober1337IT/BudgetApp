@@ -1,4 +1,5 @@
 import axios from "axios";
+import { GRAPHQL_URL } from "../config/apiConfig";
 
 interface GraphQLError {
   message: string;
@@ -16,7 +17,7 @@ const graphqlClient = async <T = unknown>(
   const token = localStorage.getItem("accessToken");
 
   const response = await axios.post<GraphQLResponse<T>>(
-    "http://localhost:8080/graphql",
+    GRAPHQL_URL,
     { query, variables },
     {
       headers: {

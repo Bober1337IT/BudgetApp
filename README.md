@@ -112,6 +112,7 @@ W katalogu `server/` utwórz plik `.env` (format `klucz=wartość`, bez cudzysł
 Przykładowa zawartość (wartości deweloperskie):
 
 ```env
+MYSQL_HOST=localhost
 MYSQL_DATABASE=budgetapp
 MYSQL_USER=budgetapp
 MYSQL_PASSWORD=budgetapp_dev
@@ -119,10 +120,13 @@ MYSQL_ROOT_PASSWORD=root_dev_password
 MYSQL_CONTAINER_NAME=budgetapp-mysql
 TZ=Europe/Warsaw
 JWT_SECRET=pasir_jwt_secret_key_for_development_only_must_be_at_least_64_bytes_long_12345
+CORS_ALLOWED_ORIGINS=http://localhost:5174
+VITE_API_BASE_URL=http://localhost:8080
 ```
 
 | Zmienna | Opis | Wymagana |
 |---|---|---|
+| `MYSQL_HOST` | Host bazy MySQL. Lokalnie: `localhost`. W Docker Compose backend ustawia `mysql` automatycznie | tak |
 | `MYSQL_DATABASE` | Nazwa bazy danych tworzonej w MySQL | tak |
 | `MYSQL_USER` | Użytkownik MySQL z dostępem do `MYSQL_DATABASE` | tak |
 | `MYSQL_PASSWORD` | Hasło użytkownika `MYSQL_USER` | tak |
@@ -130,6 +134,8 @@ JWT_SECRET=pasir_jwt_secret_key_for_development_only_must_be_at_least_64_bytes_l
 | `MYSQL_CONTAINER_NAME` | Nazwa kontenera MySQL (`server/docker/docker-compose.yml`) | tak (Docker) |
 | `TZ` | Strefa czasowa kontenera MySQL, np. `Europe/Warsaw` | nie |
 | `JWT_SECRET` | Sekret do podpisywania tokenów JWT (algorytm HS512) | tak |
+| `CORS_ALLOWED_ORIGINS` | Adres(y) frontendu dozwolone w CORS backendu (po przecinku, jeśli kilka) | tak |
+| `VITE_API_BASE_URL` | Publiczny adres backendu dla frontendu (REST, GraphQL, WebSocket) | tak |
 
 **Uwagi:**
 
@@ -137,6 +143,37 @@ JWT_SECRET=pasir_jwt_secret_key_for_development_only_must_be_at_least_64_bytes_l
 - W produkcji ustaw silne, unikalne hasła i losowy sekret JWT (np. `openssl rand -base64 64`).
 - Plik `.env` jest w `.gitignore` — nie commituj go do repozytorium.
 - Przy uruchamianiu backendu lokalnie (`mvn spring-boot:run`) uruchamiaj polecenie z katalogu `server/`, żeby Spring znalazł `.env`.
+- Frontend w trybie dev (`npm run dev`) czyta `client/.env` — ustaw tam ten sam `VITE_API_BASE_URL`.
+
+#### Przykład na serwerze Proxmox (VM z Docker Compose)
+
+Załóżmy, że VM ma adres `192.168.1.50`:
+
+```env
+MYSQL_HOST=localhost
+MYSQL_DATABASE=budgetapp
+MYSQL_USER=budgetapp
+MYSQL_PASSWORD=SilneHaslo123!
+MYSQL_ROOT_PASSWORD=SilneRootHaslo123!
+MYSQL_CONTAINER_NAME=budgetapp-mysql
+TZ=Europe/Warsaw
+JWT_SECRET=<losowy_sekret_min_64_bajty>
+CORS_ALLOWED_ORIGINS=http://192.168.1.50:5174
+VITE_API_BASE_URL=http://192.168.1.50:8080
+```
+
+Potem:
+
+```bash
+docker compose --env-file ./server/.env up -d --build
+```
+
+Aplikacja będzie dostępna pod:
+
+- frontend: `http://192.168.1.50:5174`
+- backend: `http://192.168.1.50:8080`
+
+W Docker Compose `MYSQL_HOST` dla backendu jest nadpisywany na `mysql` (nazwa serwisu), więc backend łączy się z kontenerem bazy, a nie z `localhost` VM.
 
 ### Baza danych
 
@@ -150,7 +187,7 @@ docker compose --env-file ../.env up -d
 Cały stack (MySQL + backend + frontend) z katalogu głównego:
 
 ```bash
-docker compose up -d
+docker compose --env-file ./server/.env up -d --build
 ```
 
 ### Backend

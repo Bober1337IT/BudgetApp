@@ -1,9 +1,9 @@
 // src/api/axiosClient.ts
 import axios from "axios";
+import { REST_API_URL } from "../config/apiConfig";
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:8080/api", 
-  // Ustaw tu bazowy adres backendu (np. /api) jeśli Spring wystawia taką ścieżkę
+  baseURL: REST_API_URL,
 });
 
 // Opcjonalnie dodaj interceptor do automatycznego dołączania tokena JWT
